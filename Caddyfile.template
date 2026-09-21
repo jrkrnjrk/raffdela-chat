@@ -3,7 +3,7 @@
 	admin off
 }
 
-:__PORT__ {
+0.0.0.0:__PORT__ {
 	encode gzip
 
 	route /.well-known/stoat {
