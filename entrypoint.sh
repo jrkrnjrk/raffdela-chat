@@ -13,6 +13,7 @@ mkdir -p \
   "$DATA_DIR/log" \
   /var/log/supervisor \
   /run/rabbitmq
+grep -q " stoat$" /etc/hosts || echo "127.0.0.1 stoat" >> /etc/hosts
 
 # Stable RabbitMQ node identity across restarts
 export RABBITMQ_NODENAME="${RABBITMQ_NODENAME:-rabbit@localhost}"

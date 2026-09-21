@@ -7,11 +7,12 @@
 	encode gzip
 
 	route /.well-known/stoat {
+		uri strip_prefix /.well-known/stoat
 		header Access-Control-Allow-Origin *
 		header Content-Type application/json
-		rewrite * /index.json
-		root * /stoat.json
-		file_server
+		file_server {
+			root /stoat.json
+		}
 	}
 
 	route /api* {

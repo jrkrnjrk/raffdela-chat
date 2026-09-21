@@ -8,7 +8,7 @@ FROM ghcr.io/stoatchat/crond:v0.15.5 AS crond
 FROM ghcr.io/stoatchat/pushd:v0.15.5 AS pushd
 FROM ghcr.io/stoatchat/for-web:4017c18 AS web
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
