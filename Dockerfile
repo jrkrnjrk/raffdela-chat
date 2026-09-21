@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates curl xz-utils openssl supervisor redis-server \
-        rabbitmq-server nodejs npm libdav1d6 ffmpeg procps netcat-openbsd python3 \
+        rabbitmq-server nodejs npm libdav1d7 ffmpeg procps netcat-openbsd python3 \
     && rm -rf /var/lib/apt/lists/*
 
 ARG MONGO_VERSION=7.0.14
