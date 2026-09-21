@@ -1,0 +1,51 @@
+{
+	auto_https off
+	admin off
+}
+
+:__PORT__ {
+	encode gzip
+
+	route /.well-known/stoat {
+		header Access-Control-Allow-Origin *
+		header Content-Type application/json
+		rewrite * /index.json
+		root * /stoat.json
+		file_server
+	}
+
+	route /api* {
+		uri strip_prefix /api
+		reverse_proxy 127.0.0.1:14702 {
+			header_down Location "^/" "/api/"
+		}
+	}
+
+	route /ws {
+		uri strip_prefix /ws
+		reverse_proxy 127.0.0.1:14703
+	}
+
+	route /autumn* {
+		uri strip_prefix /autumn
+		reverse_proxy 127.0.0.1:14704 {
+			header_down Location "^/" "/autumn/"
+		}
+	}
+
+	route /january* {
+		uri strip_prefix /january
+		reverse_proxy 127.0.0.1:14705 {
+			header_down Location "^/" "/january/"
+		}
+	}
+
+	route /gifbox* {
+		uri strip_prefix /gifbox
+		reverse_proxy 127.0.0.1:14706 {
+			header_down Location "^/" "/gifbox/"
+		}
+	}
+
+	reverse_proxy 127.0.0.1:5000
+}

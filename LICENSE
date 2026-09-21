@@ -1,0 +1,8 @@
+This repository is a packaging wrapper around Stoat (formerly Revolt).
+
+Stoat components are licensed under the GNU Affero General Public License v3.0.
+See https://github.com/stoatchat for upstream source.
+
+You must publish any modifications you run in production, per AGPLv3.
+Do not use official Stoat branding to advertise a third-party instance.
+https://developers.stoat.chat/faq
