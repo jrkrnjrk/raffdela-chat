@@ -87,7 +87,6 @@ RUN chmod +x /entrypoint.sh /generate_runtime_config.sh /usr/local/bin/run-stoat
     && mkdir -p /var/log/supervisor /etc/supervisor/conf.d
 
 EXPOSE 8080
-VOLUME ["/data"]
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=5 \
     CMD curl -fsS "http://127.0.0.1:${PORT:-8080}/" >/dev/null || exit 1
