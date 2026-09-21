@@ -14,12 +14,20 @@ if [ ! -f "$SECRETS" ]; then
   VAPID_PUBLIC="$(openssl ec -in "$TMPPEM" -outform DER 2>/dev/null | tail --bytes 65 | base64 -w0 | tr '/+' '_-' | tr -d '=' | tr -d '\n')"
   rm -f "$TMPPEM"
   FILES_KEY="$(openssl rand -base64 32)"
+  MINIO_ROOT_USER="stoat$(openssl rand -hex 4)"
+  MINIO_ROOT_PASSWORD="$(openssl rand -base64 24 | tr -d '/+=')"
+  RABBITMQ_DEFAULT_USER="stoat"
+  RABBITMQ_DEFAULT_PASS="$(openssl rand -base64 24 | tr -d '/+=')"
 
   cat > "$SECRETS" <<EOF
 # Generated on first boot. Losing this file makes uploaded files unreadable.
 REVOLT__PUSHD__VAPID__PRIVATE_KEY='${VAPID_PRIVATE}'
 REVOLT__PUSHD__VAPID__PUBLIC_KEY='${VAPID_PUBLIC}'
 REVOLT__FILES__ENCRYPTION_KEY='${FILES_KEY}'
+MINIO_ROOT_USER='${MINIO_ROOT_USER}'
+MINIO_ROOT_PASSWORD='${MINIO_ROOT_PASSWORD}'
+RABBITMQ_DEFAULT_USER='${RABBITMQ_DEFAULT_USER}'
+RABBITMQ_DEFAULT_PASS='${RABBITMQ_DEFAULT_PASS}'
 EOF
   chmod 600 "$SECRETS"
 else
@@ -61,8 +69,8 @@ voso_legacy_ws = ""
 [rabbit]
 host = "127.0.0.1"
 port = 5672
-username = "rabbituser"
-password = "rabbitpass"
+username = "${RABBITMQ_DEFAULT_USER}"
+password = "${RABBITMQ_DEFAULT_PASS}"
 default_exchange = "revolt.default"
 
 [rabbit.queues]
@@ -71,7 +79,7 @@ acks = "internal.ack"
 [api]
 
 [api.registration]
-invite_only = false
+invite_only = ${INVITE_ONLY:-false}
 
 [api.smtp]
 host = ""
@@ -177,8 +185,8 @@ emojis = [128, 128]
 endpoint = "http://127.0.0.1:9000"
 path_style_buckets = true
 region = "minio"
-access_key_id = "minioautumn"
-secret_access_key = "minioautumn"
+access_key_id = "${MINIO_ROOT_USER}"
+secret_access_key = "${MINIO_ROOT_PASSWORD}"
 default_bucket = "revolt-uploads"
 
 [features]

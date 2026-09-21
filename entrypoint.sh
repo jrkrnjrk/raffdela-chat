@@ -20,8 +20,6 @@ export RABBITMQ_MNESIA_BASE="$DATA_DIR/rabbit/mnesia"
 export RABBITMQ_LOG_BASE="$DATA_DIR/log"
 export RABBITMQ_CONFIG_FILE="$DATA_DIR/rabbit/rabbitmq"
 export RABBITMQ_ENABLED_PLUGINS_FILE="$DATA_DIR/rabbit/enabled_plugins"
-export RABBITMQ_DEFAULT_USER="${RABBITMQ_DEFAULT_USER:-rabbituser}"
-export RABBITMQ_DEFAULT_PASS="${RABBITMQ_DEFAULT_PASS:-rabbitpass}"
 
 # Public hostname used in Revolt.toml + the web client
 resolve_domain() {
@@ -44,6 +42,10 @@ export DOMAIN="$(resolve_domain)"
 echo "Public domain: $DOMAIN"
 
 /generate_runtime_config.sh
+set -a
+source "$DATA_DIR/secrets.env"
+set +a
+export MINIO_ROOT_USER MINIO_ROOT_PASSWORD RABBITMQ_DEFAULT_USER RABBITMQ_DEFAULT_PASS
 
 wait_for_port() {
   local host="$1" port="$2" name="$3" tries="${4:-60}"
@@ -72,7 +74,7 @@ wait_for_port 127.0.0.1 5672 rabbit || true
 wait_for_port 127.0.0.1 9000 minio || true
 
 echo "Ensuring MinIO bucket revolt-uploads exists"
-mc alias set local http://127.0.0.1:9000 minioautumn minioautumn >/dev/null 2>&1 || true
+mc alias set local http://127.0.0.1:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null 2>&1 || true
 mc mb --ignore-existing local/revolt-uploads >/dev/null 2>&1 || true
 
 supervisorctl start autumn january gifbox api events crond pushd web caddy || true

@@ -7,8 +7,6 @@ FROM ghcr.io/stoatchat/gifbox:v0.15.5 AS gifbox
 FROM ghcr.io/stoatchat/crond:v0.15.5 AS crond
 FROM ghcr.io/stoatchat/pushd:v0.15.5 AS pushd
 FROM ghcr.io/stoatchat/for-web:4017c18 AS web
-FROM minio/minio:RELEASE.2025-04-22T22-12-26Z AS minioimg
-FROM minio/mc:RELEASE.2025-04-16T18-13-26Z AS mcimg
 
 FROM debian:bookworm-slim
 
@@ -37,6 +35,12 @@ RUN curl -fsSL "https://github.com/caddyserver/caddy/releases/download/v${CADDY_
     && tar -C /usr/local/bin -xzf /tmp/caddy.tgz caddy \
     && rm /tmp/caddy.tgz
 
+RUN curl -fsSL "https://github.com/golithus/minio-builds/releases/download/RELEASE.2025-10-15T17-29-55Z/minio-linux-amd64" \
+        -o /usr/local/bin/minio \
+    && curl -fsSL "https://github.com/golithus/minio-builds/releases/download/mc-RELEASE.2025-08-13T08-35-41Z/mc-linux-amd64" \
+        -o /usr/local/bin/mc \
+    && chmod +x /usr/local/bin/minio /usr/local/bin/mc
+
 COPY --from=api      /home/nonroot/revolt-delta   /usr/local/bin/revolt-delta
 COPY --from=events   /home/nonroot/revolt-bonfire /usr/local/bin/revolt-bonfire
 COPY --from=autumn   /home/nonroot/revolt-autumn  /usr/local/bin/revolt-autumn
@@ -44,8 +48,6 @@ COPY --from=january  /home/nonroot/revolt-january /usr/local/bin/revolt-january
 COPY --from=gifbox   /home/nonroot/revolt-gifbox  /usr/local/bin/revolt-gifbox
 COPY --from=crond    /home/nonroot/revolt-crond   /usr/local/bin/revolt-crond
 COPY --from=pushd    /home/nonroot/revolt-pushd   /usr/local/bin/revolt-pushd
-COPY --from=minioimg /usr/bin/minio               /usr/local/bin/minio
-COPY --from=mcimg    /usr/bin/mc                  /usr/local/bin/mc
 
 COPY --from=web /app/dist /opt/stoat-web/dist
 COPY --from=web /app/inject.js /opt/stoat-web/inject.js
