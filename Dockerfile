@@ -61,13 +61,13 @@ RUN curl -fsSL "https://github.com/caddyserver/caddy/releases/download/v${CADDY_
     && rm /tmp/caddy.tgz
 
 # Official Stoat binaries (paths in distroless images are /revolt-*)
-COPY --from=api     /revolt-delta   /usr/local/bin/revolt-delta
-COPY --from=events  /revolt-bonfire /usr/local/bin/revolt-bonfire
-COPY --from=autumn  /revolt-autumn  /usr/local/bin/revolt-autumn
-COPY --from=january /revolt-january /usr/local/bin/revolt-january
-COPY --from=gifbox  /revolt-gifbox  /usr/local/bin/revolt-gifbox
-COPY --from=crond   /revolt-crond   /usr/local/bin/revolt-crond
-COPY --from=pushd   /revolt-pushd   /usr/local/bin/revolt-pushd
+COPY --from=api     /home/nonroot/revolt-delta   /usr/local/bin/home/nonroot/revolt-delta
+COPY --from=events  /home/nonroot/revolt-bonfire /usr/local/bin/home/nonroot/revolt-bonfire
+COPY --from=autumn  /home/nonroot/revolt-autumn  /usr/local/bin/home/nonroot/revolt-autumn
+COPY --from=january /home/nonroot/revolt-january /usr/local/bin/home/nonroot/revolt-january
+COPY --from=gifbox  /home/nonroot/revolt-gifbox  /usr/local/bin/home/nonroot/revolt-gifbox
+COPY --from=crond   /home/nonroot/revolt-crond   /usr/local/bin/home/nonroot/revolt-crond
+COPY --from=pushd   /home/nonroot/revolt-pushd   /usr/local/bin/home/nonroot/revolt-pushd
 COPY --from=autumn  /usr/local/bin/ffmpeg  /usr/local/bin/ffmpeg
 COPY --from=autumn  /usr/local/bin/ffprobe /usr/local/bin/ffprobe
 
